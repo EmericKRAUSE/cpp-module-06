@@ -38,6 +38,21 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter &obj)
 
 //	####################
 //	Methodes
+bool	isSafeToConvertToInt(const std::string &toConvert)
+{
+	if (toConvert[0] == '+' || toConvert[0] == '-')
+	{
+		if (toConvert.length() > 11)
+			return (0);
+	}
+	else if (toConvert.length() > 10)
+		return (0);
+	long	l = atol(toConvert.c_str());
+	if (l > INT_MAX || l < INT_MIN)
+		return (0);
+	return (1);
+}
+
 int isChar(const std::string &str)
 {
 	if (str.length() != 1 || std::isdigit(str[0]))
@@ -107,7 +122,7 @@ int	isInt(const std::string &str)
 			return (0);
 		i++;
 	}
-	return (1);
+	return (isSafeToConvertToInt(str));
 }
 
 void	printChar(char c)
@@ -137,7 +152,6 @@ void	printDouble(double d)
 				<< std::fixed << std::setprecision(1) << d << std::endl;
 }
 
-
 void ScalarConverter::convert(const std::string &toConvert)
 {
 	if (isChar(toConvert))
@@ -166,7 +180,7 @@ void ScalarConverter::convert(const std::string &toConvert)
 	}
 	else if (isInt(toConvert))
 	{
-		int		i = atoi(toConvert.c_str());
+		int	i = atoi(toConvert.c_str());
 		printChar(static_cast <char> (i));
 		printInt(i);
 		printFloat(static_cast <float> (i));
