@@ -63,7 +63,7 @@ int main()
 	srand (time(NULL));
 	Base *base = generate();
 	identify (base);
-	delete base;
 	identify (*base);
+	delete base;
 	return (0);
 }
