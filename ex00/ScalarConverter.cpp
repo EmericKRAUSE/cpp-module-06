@@ -43,14 +43,14 @@ bool	isSafeToConvertToInt(const std::string &toConvert)
 	if (toConvert[0] == '+' || toConvert[0] == '-')
 	{
 		if (toConvert.length() > 11)
-			return (0);
+			return (false);
 	}
 	else if (toConvert.length() > 10)
-		return (0);
+		return (false);
 	long	l = atol(toConvert.c_str());
 	if (l > INT_MAX || l < INT_MIN)
 		return (0);
-	return (1);
+	return (true);
 }
 
 int isChar(const std::string &str)
@@ -152,13 +152,43 @@ void	printDouble(double d)
 				<< std::fixed << std::setprecision(1) << d << std::endl;
 }
 
+bool	isSpecial(const std::string &toConvert)
+{
+	std::string specials[] = {"nan", "nanf", "inf", "inff", "+inf", "+inff", "-inf", "-inff"};
+
+	for (int i = 0; i < 8; i++)
+	{
+		if (toConvert == specials[i])
+			return (true);
+	}
+	return (false);
+}
+
+void	printSpecial(const std::string &toConvert)
+{
+	std::string	sFloat = toConvert;
+	std::string sDouble = toConvert;
+
+	std::cout << CYN << "char:   " << RESET << "impossible" << std::endl;
+	std::cout << CYN << "int:    " << RESET << "impossible" << std::endl;
+	if ((toConvert.length() == 5 && (toConvert[0] == '+' || toConvert[0] == '-'))
+		|| (toConvert.length() == 4 && (toConvert[0] != '+' && toConvert[0] != '-')))
+		sDouble = sDouble.substr(0, sDouble.length() - 1);
+	else
+		sFloat += 'f';
+	std::cout << CYN << "float:  " << RESET << sFloat << std::endl;
+	std::cout << CYN << "double: " << RESET << sDouble << std::endl;
+}
+
 void ScalarConverter::convert(const std::string &toConvert)
 {
-	if (isChar(toConvert))
+	if (isSpecial(toConvert))
+		printSpecial(toConvert);
+	else if (isChar(toConvert))
 	{
 		char	c = toConvert[0];
 		printChar(c);
-		printInt(static_cast <int> (c));
+		printInt(static_cast <int> (c)); 
 		printFloat(static_cast <float> (c));
 		printDouble(static_cast <double> (c));
 	}
